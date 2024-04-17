@@ -82,68 +82,97 @@ public class BankService implements BankServiceImpl{
         try{
 
             checkingRepository.deleteByName(nameOfAccount);
-        }catch(Exception e){
+        }catch(DataAccessException e){
             return new String("Server error, please try again.");
         }
         return new String("Checking account deleted.");
     }
-    public List<Checking> getAllCheckingByAccountId(Integer accountId) {
-        List<Checking> list = checkingRepository.findAllByAccountId(accountId);
-        return list;
+    public List<Checking> getAllCheckingByAccountId(Integer accountId) throws InvalidRequestException{
+        try {
+            List<Checking> list = checkingRepository.findAllByAccountId(accountId);
+            return list;
+        }catch(DataAccessException e){
+            String message = String.format("Data access problem. Please try again. %",e);
+            throw new InvalidRequestException(message);
+        }
     }
-    public List<Savings> getAllSavings(){
-        List<Savings> list = savingsRepository.findAll();
-        List<Savings> savings = list.stream().map(Savings::savingsDTO).collect(Collectors.toList());
-        return savings;
+    public List<Savings> getAllSavings() throws InvalidRequestException{
+        try {
+            List<Savings> list = savingsRepository.findAll();
+            List<Savings> savings = list.stream().map(Savings::savingsDTO).collect(Collectors.toList());
+            return savings;
+        }catch(DataAccessException e){
+            String message =  String.format("Data access problem. Please try again. %",e);
+            throw new InvalidRequestException(message);
+        }
     }
-    public List<Savings> getAllSavingsByAccountId(Integer accountId){
-        List<Savings> list = savingsRepository.findAllByAccountId(accountId);
-        return list;
+    public List<Savings> getAllSavingsByAccountId(Integer accountId) throws InvalidRequestException{
+        try {
+            List<Savings> list = savingsRepository.findAllByAccountId(accountId);
+            return list;
+        } catch (DataAccessException e){
+            String message = String.format("Data access problem. Please try again. %",e);
+            throw new InvalidRequestException(message);
+        }
     }
-    public String createSavings(CreateSavings createSavings) {
+    public String createSavings(CreateSavings createSavings) throws InvalidRequestException {
         Account existingAccount = accountRepository.findByName(createSavings.getUserName());
+        try {
+            if (existingAccount != null) {
+                Savings existingSavingsName = savingsRepository.findByName(createSavings.getAccountName());
 
-        if (existingAccount != null) {
-            Savings existingSavingsName = savingsRepository.findByName(createSavings.getAccountName());
+                if (existingSavingsName == null) {
+                    Savings savingsMade = Savings.builder()
+                            .name(createSavings.getAccountName())
+                            .available_balance(0)
+                            .present_balance(0)
+                            .account(existingAccount)
+                            .build();
 
-            if (existingSavingsName == null) {
-                Savings savingsMade = Savings.builder()
-                        .name(createSavings.getAccountName())
-                        .available_balance(0)
-                        .present_balance(0)
-                        .account(existingAccount)
-                        .build();
-
-                Savings newAccount = savingsRepository.save(savingsMade);
-                return new String("Savings account created successfully.");
+                    Savings newAccount = savingsRepository.save(savingsMade);
+                    return new String("Savings account created successfully.");
+                } else {
+                    return new String("Please use unique name. Savings account name already used : " + createSavings.getAccountName());
+                }
             } else {
-                return new String("Please use unique name. Savings account name already used : " + createSavings.getAccountName());
+                return new String("Username not found : " + createSavings.getUserName());
             }
-        } else {
-            return new String("Username not found : " + createSavings.getUserName());
+        }catch(DataAccessException e){
+            String message = String.format("Data access problem. Please try again. %",e);
+            throw new InvalidRequestException(message);
         }
     }
 
     public String deleteSavingsAccount(String nameOfAccount){
         try{
             savingsRepository.deleteByName(nameOfAccount);
-        }catch(Exception e){
+        }catch(DataAccessException e){
             return new String("Server error, please try again.");
         }
         return new String("Savings account deleted.");
     }
-    public List<Trxnsxctions> getTransactionsByCheckingAndAccountIds(Integer checkingId, Integer accountId){
-        List<Trxnsxctions> list = trxnsxctionRepository.findAllByChecking_IdAndChecking_Account_Id(checkingId,accountId);
-        List<Trxnsxctions> checkingTrxnsxctions = list.stream()
-                .map(Trxnsxctions::checkingDTO)
-                .collect(Collectors.toList());
-        return checkingTrxnsxctions;
+    public List<Trxnsxctions> getTransactionsByCheckingAndAccountIds(Integer checkingId, Integer accountId) throws InvalidRequestException {
+        try {
+            List<Trxnsxctions> list = trxnsxctionRepository.findAllByChecking_IdAndChecking_Account_Id(checkingId, accountId);
+            List<Trxnsxctions> checkingTrxnsxctions = list.stream()
+                    .map(Trxnsxctions::checkingDTO)
+                    .collect(Collectors.toList());
+            return checkingTrxnsxctions;
+        } catch (DataAccessException e){
+            String message = String.format("Data access problem. Please try again. %",e);
+            throw new InvalidRequestException(message);
+        }
     }
-    public List<Trxnsxctions> getTransactionsBySavingsAndAccountIds(Integer savingsId, Integer accountId){
-        List<Trxnsxctions> list = trxnsxctionRepository.findAllBySavings_IdAndSavings_Account_Id(savingsId,accountId);
-        List<Trxnsxctions> savingsTrxnsxctions = list.stream()
-                .map(Trxnsxctions::savingsDTO)
-                .collect(Collectors.toList());
-        return savingsTrxnsxctions;
+    public List<Trxnsxctions> getTransactionsBySavingsAndAccountIds(Integer savingsId, Integer accountId) throws InvalidRequestException{
+        try {
+            List<Trxnsxctions> list = trxnsxctionRepository.findAllBySavings_IdAndSavings_Account_Id(savingsId, accountId);
+            List<Trxnsxctions> savingsTrxnsxctions = list.stream()
+                    .map(Trxnsxctions::savingsDTO)
+                    .collect(Collectors.toList());
+            return savingsTrxnsxctions;
+        } catch (DataAccessException e){
+            String message = String.format("Data access problem. Please try again. %",e);
+            throw new InvalidRequestException(message);
+        }
     }
 }

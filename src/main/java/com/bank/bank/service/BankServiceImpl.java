@@ -21,18 +21,18 @@ public interface BankServiceImpl {
 
     String deleteCheckingAccount(String nameOfAccount);
 
-    List<Checking> getAllCheckingByAccountId(Integer accountId);
+    List<Checking> getAllCheckingByAccountId(Integer accountId) throws InvalidRequestException;
 
-    List<Savings> getAllSavings();
+    List<Savings> getAllSavings() throws InvalidRequestException;
 
-    List<Savings> getAllSavingsByAccountId(Integer accountId);
+    List<Savings> getAllSavingsByAccountId(Integer accountId) throws InvalidRequestException;
 
-    String createSavings(CreateSavings createSavings);
+    String createSavings(CreateSavings createSavings) throws InvalidRequestException;
 
     String deleteSavingsAccount(String nameOfAccount);
 
-    List<Trxnsxctions> getTransactionsByCheckingAndAccountIds(Integer checkingId, Integer accountId);
+    List<Trxnsxctions> getTransactionsByCheckingAndAccountIds(Integer checkingId, Integer accountId) throws InvalidRequestException;
 
-    List<Trxnsxctions> getTransactionsBySavingsAndAccountIds(Integer savingsId, Integer accountId);
+    List<Trxnsxctions> getTransactionsBySavingsAndAccountIds(Integer savingsId, Integer accountId) throws InvalidRequestException;
 
 }

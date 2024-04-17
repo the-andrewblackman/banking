@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/bank")
@@ -58,19 +57,19 @@ public class BankController {
         return new ResponseEntity<>(bankService.deleteCheckingAccount(nameOfAccount),HttpStatus.OK);
     }
     @GetMapping("/checking/{accountId}")
-    public ResponseEntity<List<Checking>> getAllCheckingByAccountId(@PathVariable Integer accountId) {
+    public ResponseEntity<List<Checking>> getAllCheckingByAccountId(@PathVariable Integer accountId) throws InvalidRequestException {
         return new ResponseEntity<>(bankService.getAllCheckingByAccountId(accountId),HttpStatus.OK);
     }
     @GetMapping("/savings")
-    public ResponseEntity<List<Savings>> getAllSavings(){
+    public ResponseEntity<List<Savings>> getAllSavings() throws InvalidRequestException{
         return new ResponseEntity<>(bankService.getAllSavings(),HttpStatus.OK);
     }
     @GetMapping("/savings/{accountId}")
-    public ResponseEntity<List<Savings>> getAllSavingsByAccountId(@PathVariable Integer accountId){
+    public ResponseEntity<List<Savings>> getAllSavingsByAccountId(@PathVariable Integer accountId) throws InvalidRequestException{
         return new ResponseEntity<>(bankService.getAllSavingsByAccountId(accountId),HttpStatus.OK);
     }
     @PostMapping("/savings/create")
-    public ResponseEntity<String> createSavings(@RequestBody CreateSavings createSavings) {
+    public ResponseEntity<String> createSavings(@RequestBody CreateSavings createSavings) throws InvalidRequestException{
         return new ResponseEntity<>(bankService.createSavings(createSavings),HttpStatus.OK);
     }
     @DeleteMapping ("/savings/delete")
@@ -78,11 +77,11 @@ public class BankController {
         return new ResponseEntity<>(bankService.deleteSavingsAccount(nameOfAccount),HttpStatus.OK);
     }
     @GetMapping("/txn/checking/{checkingId}/{accountId}")
-    public ResponseEntity<List<Trxnsxctions>> getTransactionsByCheckingAndAccountIds(@PathVariable Integer checkingId, @PathVariable Integer accountId){
+    public ResponseEntity<List<Trxnsxctions>> getTransactionsByCheckingAndAccountIds(@PathVariable Integer checkingId, @PathVariable Integer accountId) throws InvalidRequestException{
         return new ResponseEntity<>(bankService.getTransactionsByCheckingAndAccountIds(checkingId,accountId),HttpStatus.OK);
     }
     @GetMapping("/txn/savings/{savingsId}/{accountId}")
-    public ResponseEntity<List<Trxnsxctions>> getTransactionsBySavingsAndAccountIds(@PathVariable Integer savingsId, @PathVariable Integer accountId){
+    public ResponseEntity<List<Trxnsxctions>> getTransactionsBySavingsAndAccountIds(@PathVariable Integer savingsId, @PathVariable Integer accountId) throws InvalidRequestException{
         return new ResponseEntity<>(bankService.getTransactionsBySavingsAndAccountIds(savingsId,accountId),HttpStatus.OK);
     }
 
