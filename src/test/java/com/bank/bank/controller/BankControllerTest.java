@@ -5,6 +5,7 @@ import com.bank.bank.entity.Account;
 import com.bank.bank.entity.Checking;
 import com.bank.bank.entity.Savings;
 import com.bank.bank.entity.Trxnsxctions;
+import com.bank.bank.exception.InvalidRequestException;
 import com.bank.bank.service.BankService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,24 +65,6 @@ class BankControllerTest {
                 .andExpect(content().string(containsString("Account New Account made successfully")));
     }
 
-    @Test
-    public void testGetAllChecking() throws Exception {
-        Account newAccount = new Account();
-        List<Trxnsxctions> list = new ArrayList<>();
-
-        Account kidsAccount = new Account();
-        List<Trxnsxctions> kids_list = new ArrayList<>();
-
-        given(bankService.getAllChecking()).willReturn(Arrays
-                .asList(new Checking(1,"myChecking",9, 100,newAccount,list),
-                        new Checking(2, "kidsChecking", 3,5,kidsAccount, kids_list)));
-
-        mockMvc.perform(get("/api/bank/checking"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].present_balance").value(100))
-                .andExpect(jsonPath("$[1].present_balance").value(5));
-    }
 
     @Test
     public void testCreateChecking() throws Exception {
@@ -103,9 +86,64 @@ class BankControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Checking Account Deleted")));
     }
+    @Test
+    public void testGetAllChecking() throws Exception {
+        Account newAccount = new Account();
+        List<Trxnsxctions> list = new ArrayList<>();
+
+        Account kidsAccount = new Account();
+        List<Trxnsxctions> kids_list = new ArrayList<>();
+
+        given(bankService.getAllChecking()).willReturn(Arrays
+                .asList(new Checking(1,"myChecking",9, 100,newAccount,list),
+                        new Checking(2, "kidsChecking", 3,5,kidsAccount, kids_list)));
+
+        mockMvc.perform(get("/api/bank/checking"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].present_balance").value(100))
+                .andExpect(jsonPath("$[1].present_balance").value(5));
+    }
 
     @Test
-    void getAllCheckingByAccountId() {
+    void getAllCheckingByAccountId() throws Exception {
+        List<Checking> checking = new ArrayList<>();
+        List<Savings> savings = new ArrayList<>();
+        Account billAccount = new Account(1,"bill",checking, savings);
+        List<Trxnsxctions> listForBill = new ArrayList<>();
+
+        List<Checking> checking2 = new ArrayList<>();
+        List<Savings> savings2 = new ArrayList<>();
+        Account edgarAccount = new Account(2,"edgar",checking2,savings2);
+        List<Trxnsxctions> listForEdgar = new ArrayList<>();
+
+        // Mock service to return only relevant data based on account ID
+        given(bankService.getAllCheckingByAccountId(eq(1))).willReturn(Arrays.asList(
+                new Checking(1, "BillsChecking", 9, 100, billAccount, listForBill)
+        ));
+
+        mockMvc.perform(get("/api/bank/checking/{accountId}", 1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))  // Checks that one checking account is returned
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("BillsChecking"))
+                .andExpect(jsonPath("$[0].available_balance").value(9))
+                .andExpect(jsonPath("$[0].present_balance").value(100))
+                .andExpect(jsonPath("$[0].account.id").value(1));
+
+        given(bankService.getAllCheckingByAccountId(eq(2))).willReturn(Arrays.asList(
+                new Checking(2, "EdgarsChecking", 3, 5, edgarAccount, listForEdgar)
+        ));
+
+        mockMvc.perform(get("/api/bank/checking/{accountId}", 2))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))  // Checks that one checking account is returned
+                .andExpect(jsonPath("$[0].id").value(2))
+                .andExpect(jsonPath("$[0].name").value("EdgarsChecking"))
+                .andExpect(jsonPath("$[0].available_balance").value(3))
+                .andExpect(jsonPath("$[0].present_balance").value(5))
+                .andExpect(jsonPath("$[0].account.id").value(2));
+
     }
 
     @Test
