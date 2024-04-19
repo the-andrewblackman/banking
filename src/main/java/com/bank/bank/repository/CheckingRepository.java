@@ -12,6 +12,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 public interface CheckingRepository extends JpaRepository<Checking,Integer> {
+
     List<Checking> findAllByAccountId(Integer accountId);
     Checking findByName(String accountName);
     @Modifying

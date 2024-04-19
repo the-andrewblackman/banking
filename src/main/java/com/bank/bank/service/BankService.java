@@ -151,15 +151,14 @@ public class BankService implements BankServiceImpl{
         }
         return new String("Savings account deleted.");
     }
-    public List<Trxnsxctions> getTransactionsByCheckingAndAccountIds(Integer checkingId, Integer accountId) throws InvalidRequestException {
+    public List<Trxnsxctions> getTransactionsByCheckingId(Integer checkingId) throws InvalidRequestException {
         try {
-            List<Trxnsxctions> list = trxnsxctionRepository.findAllByChecking_IdAndChecking_Account_Id(checkingId, accountId);
-            List<Trxnsxctions> checkingTrxnsxctions = list.stream()
+            List<Trxnsxctions> transactions = trxnsxctionRepository.findAllByCheckingId(checkingId);
+            return transactions.stream()
                     .map(Trxnsxctions::checkingDTO)
                     .collect(Collectors.toList());
-            return checkingTrxnsxctions;
-        } catch (DataAccessException e){
-            String message = String.format("Data access problem. Please try again. %",e);
+        } catch (DataAccessException e) {
+            String message = String.format("Data access problem. Please try again. %s", e.getMessage());
             throw new InvalidRequestException(message);
         }
     }
