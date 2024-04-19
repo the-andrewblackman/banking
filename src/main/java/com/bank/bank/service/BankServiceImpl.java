@@ -34,5 +34,6 @@ public interface BankServiceImpl {
     List<Trxnsxctions> getTransactionsByCheckingAndAccountIds(Integer checkingId, Integer accountId) throws InvalidRequestException;
 
     List<Trxnsxctions> getTransactionsBySavingsAndAccountIds(Integer savingsId, Integer accountId) throws InvalidRequestException;
+    List<Trxnsxctions> getAllTransactions() throws InvalidRequestException;
 
 }

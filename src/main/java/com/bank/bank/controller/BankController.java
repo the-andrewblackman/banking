@@ -12,6 +12,7 @@ import com.bank.bank.repository.CheckingRepository;
 import com.bank.bank.repository.SavingsRepository;
 import com.bank.bank.repository.TrxnsxctionRepository;
 import com.bank.bank.service.BankService;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,6 +84,10 @@ public class BankController {
     @GetMapping("/txn/savings/{savingsId}/{accountId}")
     public ResponseEntity<List<Trxnsxctions>> getTransactionsBySavingsAndAccountIds(@PathVariable Integer savingsId, @PathVariable Integer accountId) throws InvalidRequestException{
         return new ResponseEntity<>(bankService.getTransactionsBySavingsAndAccountIds(savingsId,accountId),HttpStatus.OK);
+    }
+    @GetMapping("/txn/all")
+    public ResponseEntity<List<Trxnsxctions>> getAllTransactions() throws InvalidRequestException{
+        return new ResponseEntity<>(bankService.getAllTransactions(), HttpStatus.OK);
     }
 
 

@@ -175,4 +175,8 @@ public class BankService implements BankServiceImpl{
             throw new InvalidRequestException(message);
         }
     }
+    public List<Trxnsxctions> getAllTransactions() throws InvalidRequestException{
+        List<Trxnsxctions> list = trxnsxctionRepository.findAll();
+        return list;
+    }
 }

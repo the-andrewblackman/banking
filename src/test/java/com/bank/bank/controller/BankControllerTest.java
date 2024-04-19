@@ -1,6 +1,7 @@
 package com.bank.bank.controller;
 
 import com.bank.bank.dto.CreateChecking;
+import com.bank.bank.dto.CreateSavings;
 import com.bank.bank.entity.Account;
 import com.bank.bank.entity.Checking;
 import com.bank.bank.entity.Savings;
@@ -53,7 +54,6 @@ class BankControllerTest {
                 .andExpect(jsonPath("$[0].name").value("Sample Account"))
                 .andExpect(jsonPath("$[1].name").value("Second Account"));
     }
-
     @Test
     public void testCreateAccount() throws Exception {
         given(bankService.createAccount(any(Account.class))).willReturn("Account New Account made successfully");
@@ -64,8 +64,6 @@ class BankControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Account New Account made successfully")));
     }
-
-
     @Test
     public void testCreateChecking() throws Exception {
         given(bankService.createChecking(any(CreateChecking.class))).willReturn("Checking Account Created");
@@ -88,15 +86,15 @@ class BankControllerTest {
     }
     @Test
     public void testGetAllChecking() throws Exception {
-        Account newAccount = new Account();
+        Account account1 = new Account();
         List<Trxnsxctions> list = new ArrayList<>();
 
-        Account kidsAccount = new Account();
+        Account account2 = new Account();
         List<Trxnsxctions> kids_list = new ArrayList<>();
 
         given(bankService.getAllChecking()).willReturn(Arrays
-                .asList(new Checking(1,"myChecking",9, 100,newAccount,list),
-                        new Checking(2, "kidsChecking", 3,5,kidsAccount, kids_list)));
+                .asList(new Checking(1,"checking1",9, 100,account1,list),
+                        new Checking(2, "checking2", 3,5,account2, kids_list)));
 
         mockMvc.perform(get("/api/bank/checking"))
                 .andExpect(status().isOk())
@@ -147,23 +145,88 @@ class BankControllerTest {
     }
 
     @Test
-    void getAllSavings() {
+    void getAllSavings() throws Exception {
+        Account account1 = new Account();
+        List<Trxnsxctions> list1 = new ArrayList<>();
+
+        Account account2 = new Account();
+        List<Trxnsxctions> list2 = new ArrayList<>();
+
+        given(bankService.getAllSavings()).willReturn(Arrays
+                .asList(new Savings(1,"Savings1",9, 100, account1,list1),
+                        new Savings(2, "Savings2", 3,5, account2, list2)));
+
+        mockMvc.perform(get("/api/bank/savings"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].present_balance").value(100))
+                .andExpect(jsonPath("$[1].present_balance").value(5));
     }
 
     @Test
-    void getAllSavingsByAccountId() {
+    void getAllSavingsByAccountId() throws Exception{
+
+        List<Checking> checking = new ArrayList<>();
+        List<Savings> savings = new ArrayList<>();
+        Account billAccount = new Account(1,"bill",checking, savings);
+        List<Trxnsxctions> listForBill = new ArrayList<>();
+
+        // Mock service to return only relevant data based on account ID
+        given(bankService.getAllSavingsByAccountId(eq(1))).willReturn(Arrays.asList(
+                new Savings(1, "BillsSavings", 9, 100, billAccount, listForBill)
+        ));
+
+        mockMvc.perform(get("/api/bank/savings/{accountId}", 1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))  // Checks that one checking account is returned
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("BillsSavings"))
+                .andExpect(jsonPath("$[0].available_balance").value(9))
+                .andExpect(jsonPath("$[0].present_balance").value(100))
+                .andExpect(jsonPath("$[0].account.id").value(1));
     }
 
     @Test
-    void createSavings() {
+    void createSavings() throws Exception{
+        given(bankService.createSavings(any(CreateSavings.class))).willReturn("Savings Account Created");
+
+        mockMvc.perform(post("/api/bank/savings/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":1,\"initial Savings transfer\":500}"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Savings Account Created")));
     }
 
     @Test
-    void deleteSavingsAccount() {
+    void deleteSavingsAccount() throws Exception {
+        given(bankService.deleteSavingsAccount(anyString())).willReturn("Savings Account Deleted");
+
+        mockMvc.perform(delete("/api/bank/savings/delete")
+                        .param("name", "Savings Account"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Savings Account Deleted")));
     }
 
     @Test
-    void getTransactionsByCheckingAndAccountIds() {
+    void getTransactionsByCheckingAndAccountIds() throws Exception {
+//        List<Checking> checking = new ArrayList<>();
+//        List<Savings> savings = new ArrayList<>();
+//        Account billAccount = new Account(1,"bill",checking, savings);
+//        List<Trxnsxctions> listForBill = new ArrayList<>();
+//
+//        // Mock service to return only relevant data based on account ID
+//        given(bankService.getTransactionsByCheckingAndAccountIds(eq(1),eq(2))).willReturn(Arrays.asList(
+//                new Trxnsxctions(1, "Credit", "Applebees dinner", 100, checking, savings );
+//        ));
+//
+//        mockMvc.perform(get("/api/bank/savings/{accountId}", 1))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$", hasSize(1)))  // Checks that one checking account is returned
+//                .andExpect(jsonPath("$[0].id").value(1))
+//                .andExpect(jsonPath("$[0].name").value("BillsSavings"))
+//                .andExpect(jsonPath("$[0].available_balance").value(9))
+//                .andExpect(jsonPath("$[0].present_balance").value(100))
+//                .andExpect(jsonPath("$[0].account.id").value(1));
     }
 
     @Test
