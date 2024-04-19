@@ -29,7 +29,7 @@ public interface BankServiceImpl {
 
     String createSavings(CreateSavings createSavings) throws InvalidRequestException;
 
-    String deleteSavingsAccount(String nameOfAccount);
+    String deleteSavingsAccount(Integer id) throws InvalidRequestException;
 
     public List<Trxnsxctions> getTransactionsByCheckingId(Integer checkingId) throws InvalidRequestException;
 

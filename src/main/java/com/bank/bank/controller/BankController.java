@@ -74,8 +74,8 @@ public class BankController {
         return new ResponseEntity<>(bankService.createSavings(createSavings),HttpStatus.OK);
     }
     @DeleteMapping ("/savings/delete")
-    public ResponseEntity<String> deleteSavingsAccount(@RequestParam("name") String nameOfAccount){
-        return new ResponseEntity<>(bankService.deleteSavingsAccount(nameOfAccount),HttpStatus.OK);
+    public ResponseEntity<String> deleteSavingsAccount(@RequestParam("id") Integer id){
+        return new ResponseEntity<>(bankService.deleteSavingsAccount(id),HttpStatus.OK);
     }
     @GetMapping("/txn/checking/{checkingId}")
     public ResponseEntity<List<Trxnsxctions>> getTransactionsByCheckingAndAccountIds(@PathVariable Integer checkingId) throws InvalidRequestException{

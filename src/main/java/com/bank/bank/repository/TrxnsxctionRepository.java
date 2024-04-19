@@ -12,4 +12,6 @@ public interface TrxnsxctionRepository extends JpaRepository<Trxnsxctions,Intege
     List<Trxnsxctions> findAllBySavingsId(Integer savingsId);
 
     List<Trxnsxctions> findByCheckingIdAndCheckingAccountId(Integer checkingId, Integer accountId);
+    List<Trxnsxctions> findBySavingsId(Integer savingsId);
+
 }

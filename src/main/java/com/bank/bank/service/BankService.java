@@ -143,13 +143,16 @@ public class BankService implements BankServiceImpl{
         }
     }
 
-    public String deleteSavingsAccount(String nameOfAccount){
-        try{
-            savingsRepository.deleteByName(nameOfAccount);
-        }catch(DataAccessException e){
-            return new String("Server error, please try again.");
+    public String deleteSavingsAccount(Integer savingsId){
+        List<Trxnsxctions> relatedTransactions = trxnsxctionRepository.findBySavingsId(savingsId);
+
+        if (!relatedTransactions.isEmpty()) {
+            // Handle related transactions, e.g., delete or reassign
+            trxnsxctionRepository.deleteAll(relatedTransactions);
         }
-        return new String("Savings account deleted.");
+
+        savingsRepository.deleteById(savingsId);
+        return "savings account deleted";
     }
     public List<Trxnsxctions> getTransactionsByCheckingId(Integer checkingId) throws InvalidRequestException {
         try {
