@@ -32,6 +32,11 @@ public interface BankServiceImpl {
     String deleteSavingsAccount(String nameOfAccount);
 
     public List<Trxnsxctions> getTransactionsByCheckingId(Integer checkingId) throws InvalidRequestException;
+
+    public List<Trxnsxctions> getTransactionsBySavingsId(Integer savingsId) throws InvalidRequestException;
     List<Trxnsxctions> getAllTransactions() throws InvalidRequestException;
 
-}
+    public List<Trxnsxctions> getTransactionsByCheckingIdAndAccountId(Integer checkingId, Integer accountId) throws InvalidRequestException;
+
+
+    }

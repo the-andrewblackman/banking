@@ -17,9 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class Checking {
-
-    // add Trxnsactions to checking, so each checking account has it's associated transactions.
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonInclude(JsonInclude.Include.NON_NULL)

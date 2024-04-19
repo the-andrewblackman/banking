@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TrxnsxctionRepository extends JpaRepository<Trxnsxctions,Integer> {
     List<Trxnsxctions> findAllByCheckingId(Integer checkingId);
-    List<Trxnsxctions> findAllBySavings_IdAndSavings_Account_Id(Integer SavingsId, Integer accountId);
+    List<Trxnsxctions> findAllBySavingsId(Integer savingsId);
 
-    List<Trxnsxctions> findAllBySavings_Account_Id(Integer accountId);
+    List<Trxnsxctions> findByCheckingIdAndCheckingAccountId(Integer checkingId, Integer accountId);
 }

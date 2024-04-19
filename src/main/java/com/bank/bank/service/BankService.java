@@ -162,15 +162,14 @@ public class BankService implements BankServiceImpl{
             throw new InvalidRequestException(message);
         }
     }
-    public List<Trxnsxctions> getTransactionsBySavingsAndAccountIds(Integer savingsId, Integer accountId) throws InvalidRequestException{
+    public List<Trxnsxctions> getTransactionsBySavingsId(Integer savingsId) throws InvalidRequestException{
         try {
-            List<Trxnsxctions> list = trxnsxctionRepository.findAllBySavings_IdAndSavings_Account_Id(savingsId, accountId);
-            List<Trxnsxctions> savingsTrxnsxctions = list.stream()
+            List<Trxnsxctions> transactions = trxnsxctionRepository.findAllBySavingsId(savingsId);
+            return transactions.stream()
                     .map(Trxnsxctions::savingsDTO)
                     .collect(Collectors.toList());
-            return savingsTrxnsxctions;
-        } catch (DataAccessException e){
-            String message = String.format("Data access problem. Please try again. %",e);
+        } catch (DataAccessException e) {
+            String message = String.format("Data access problem. Please try again. %s", e.getMessage());
             throw new InvalidRequestException(message);
         }
     }
@@ -178,4 +177,16 @@ public class BankService implements BankServiceImpl{
         List<Trxnsxctions> list = trxnsxctionRepository.findAll();
         return list;
     }
+    public List<Trxnsxctions> getTransactionsByCheckingIdAndAccountId(Integer checkingId, Integer accountId) throws InvalidRequestException {
+        try {
+            List<Trxnsxctions> transactions = trxnsxctionRepository.findByCheckingIdAndCheckingAccountId(checkingId, accountId);
+            return transactions.stream()
+                    .map(Trxnsxctions::checkingDTO)
+                    .collect(Collectors.toList());
+        } catch (DataAccessException e) {
+            String message = String.format("Data access problem. Please try again. %s", e.getMessage());
+            throw new InvalidRequestException(message);
+        }
+    }
+
 }
