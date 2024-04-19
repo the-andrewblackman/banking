@@ -71,6 +71,51 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "admin: all txn's in system",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/bank/txn/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"bank",
+								"txn",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin: txn's by checking id & account id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/bank/txn/1/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"bank",
+								"txn",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -83,7 +128,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/bank/checking/2",
+							"raw": "http://localhost:8082/api/bank/checking/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -93,7 +138,7 @@
 								"api",
 								"bank",
 								"checking",
-								"2"
+								"1"
 							]
 						}
 					},
@@ -122,12 +167,12 @@
 					"response": []
 				},
 				{
-					"name": "checking txn's by checking id & account id",
+					"name": "checking txn's by checking id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/bank/txn/checking/2/2",
+							"raw": "http://localhost:8082/api/bank/txn/checking/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -138,7 +183,6 @@
 								"bank",
 								"txn",
 								"checking",
-								"2",
 								"2"
 							]
 						}
@@ -146,12 +190,12 @@
 					"response": []
 				},
 				{
-					"name": "savings txn's by savings id & account id",
+					"name": "savings txn's by savings id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/bank/txn/savings/1/1",
+							"raw": "http://localhost:8082/api/bank/txn/savings/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -162,7 +206,6 @@
 								"bank",
 								"txn",
 								"savings",
-								"1",
 								"1"
 							]
 						}
@@ -273,7 +316,7 @@
 			"name": "delete",
 			"item": [
 				{
-					"name": "checking",
+					"name": "checking by name",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -310,7 +353,7 @@
 					"response": []
 				},
 				{
-					"name": "savings",
+					"name": "savings by name",
 					"request": {
 						"method": "DELETE",
 						"header": [],
