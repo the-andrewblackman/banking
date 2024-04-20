@@ -6,7 +6,6 @@ import com.bank.bank.entity.Account;
 import com.bank.bank.entity.Checking;
 import com.bank.bank.entity.Savings;
 import com.bank.bank.entity.Trxnsxctions;
-import com.bank.bank.exception.InvalidRequestException;
 import com.bank.bank.service.BankService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

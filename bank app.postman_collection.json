@@ -100,7 +100,31 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/bank/txn/1/1",
+							"raw": "http://localhost:8082/api/bank/checking/txn/1/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"bank",
+								"checking",
+								"txn",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "admin: txn's by savings id & account id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/bank/txn/savings/1/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -110,6 +134,7 @@
 								"api",
 								"bank",
 								"txn",
+								"savings",
 								"1",
 								"1"
 							]
@@ -316,7 +341,7 @@
 			"name": "delete",
 			"item": [
 				{
-					"name": "checking by name",
+					"name": "checking account by id",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -353,12 +378,12 @@
 					"response": []
 				},
 				{
-					"name": "savings by name",
+					"name": "savings account by id",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8082/api/bank/savings/delete?name=savings_me",
+							"raw": "http://localhost:8082/api/bank/savings/delete?id=1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -372,8 +397,8 @@
 							],
 							"query": [
 								{
-									"key": "name",
-									"value": "savings_me"
+									"key": "id",
+									"value": "1"
 								}
 							]
 						}
