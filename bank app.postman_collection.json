@@ -95,7 +95,7 @@
 					"response": []
 				},
 				{
-					"name": "admin: txn's by checking id & account id",
+					"name": "admin: txn's by account id & checking id",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -119,7 +119,7 @@
 					"response": []
 				},
 				{
-					"name": "admin: txn's by savings id & account id",
+					"name": "admin: txn's by account id & savings id",
 					"request": {
 						"method": "GET",
 						"header": [],
