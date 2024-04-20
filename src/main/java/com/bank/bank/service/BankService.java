@@ -191,5 +191,17 @@ public class BankService implements BankServiceImpl{
             throw new InvalidRequestException(message);
         }
     }
+    public List<Trxnsxctions> getTransactionsBySavingsIdAndAccountId(Integer savingsId, Integer accountId) throws InvalidRequestException {
+        try {
+            List<Trxnsxctions> transactions = trxnsxctionRepository.findBySavingsIdAndSavingsAccountId(savingsId, accountId);
+            return transactions.stream()
+                    .map(Trxnsxctions::savingsDTO)
+                    .collect(Collectors.toList());
+        } catch (DataAccessException e) {
+            String message = String.format("Data access problem. Please try again. %s", e.getMessage());
+            throw new InvalidRequestException(message);
+        }
+    }
 
-}
+
+    }

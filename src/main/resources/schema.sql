@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS trxnsxctions;
-DROP TABLE IF EXISTS savings;
-DROP TABLE IF EXISTS checking;
-DROP TABLE IF EXISTS account;
+DROP TABLE trxnsxctions CASCADE;
+DROP TABLE savings CASCADE;
+DROP TABLE checking CASCADE;
+DROP TABLE account CASCADE;
 
 
 CREATE TABLE account (
@@ -10,7 +10,7 @@ CREATE TABLE account (
 );
 
 CREATE TABLE checking (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name TEXT NOT NULL,
     available_balance INT,
     present_balance INT,
@@ -19,7 +19,7 @@ CREATE TABLE checking (
 );
 
 CREATE TABLE savings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name TEXT NOT NULL,
     available_balance INT,
     present_balance INT,

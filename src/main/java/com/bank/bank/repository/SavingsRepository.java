@@ -20,4 +20,5 @@ public interface SavingsRepository extends JpaRepository<Savings,Integer> {
     void deleteByNameAndId(@Param("name") String name, @Param("id") Integer id);
 
 
+
 }

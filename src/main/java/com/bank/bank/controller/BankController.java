@@ -90,11 +90,15 @@ public class BankController {
         return new ResponseEntity<>(bankService.getAllTransactions(), HttpStatus.OK);
     }
 
-    @GetMapping("/txn/{accountId}/{checkingId}")
+    @GetMapping("/txn/checking/{accountId}/{checkingId}")
     public ResponseEntity<List<Trxnsxctions>> getTransactionsByAccountIdAndCheckingId(@PathVariable Integer checkingId,@PathVariable Integer accountId) throws InvalidRequestException {
         return new ResponseEntity<>(bankService.getTransactionsByCheckingIdAndAccountId(checkingId,accountId),HttpStatus.OK);
     }
 
+    @GetMapping("/txn/savings/{accountId}/{savingsId}")
+    public ResponseEntity<List<Trxnsxctions>> getTransactionsByAccountIdAndSavingsId(@PathVariable Integer savingsId,@PathVariable Integer accountId) throws InvalidRequestException {
+        return new ResponseEntity<>(bankService.getTransactionsBySavingsIdAndAccountId(savingsId,accountId),HttpStatus.OK);
+    }
 
 
 }

@@ -199,37 +199,60 @@ class BankControllerTest {
 
     @Test
     void deleteSavingsAccount() throws Exception {
-//        given(bankService.deleteSavingsAccount(anyString())).willReturn("Savings Account Deleted");
+        given(bankService.deleteSavingsAccount(anyInt())).willReturn("Savings Account Deleted");
 
-//        mockMvc.perform(delete("/api/bank/savings/delete")
-//                        .param("name", "Savings Account"))
-//                .andExpect(status().isOk())
-//                .andExpect(content().string(containsString("Savings Account Deleted")));
+        mockMvc.perform(delete("/api/bank/savings/delete")
+                        .param("id", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Savings Account Deleted")));
     }
 
     @Test
-    void getTransactionsByCheckingAndAccountIds() throws Exception {
-//        List<Checking> checking = new ArrayList<>();
-//        List<Savings> savings = new ArrayList<>();
-//        Account billAccount = new Account(1,"bill",checking, savings);
-//        List<Trxnsxctions> listForBill = new ArrayList<>();
-//
-//        // Mock service to return only relevant data based on account ID
-//        given(bankService.getTransactionsByCheckingAndAccountIds(eq(1),eq(2))).willReturn(Arrays.asList(
-//                new Trxnsxctions(1, "Credit", "Applebees dinner", 100, checking, savings );
-//        ));
-//
-//        mockMvc.perform(get("/api/bank/savings/{accountId}", 1))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$", hasSize(1)))  // Checks that one checking account is returned
-//                .andExpect(jsonPath("$[0].id").value(1))
-//                .andExpect(jsonPath("$[0].name").value("BillsSavings"))
-//                .andExpect(jsonPath("$[0].available_balance").value(9))
-//                .andExpect(jsonPath("$[0].present_balance").value(100))
-//                .andExpect(jsonPath("$[0].account.id").value(1));
+    void getTransactionsByCheckingIdAndAccountId() throws Exception {
+        List<Checking> checkingList = new ArrayList<>();
+        List<Savings> savingsList = new ArrayList<>();
+
+        Account billAccount = new Account(1,"Bill",checkingList, savingsList);
+        Checking checking = new Checking(1,"Bill's checking",1,2,billAccount, new ArrayList<>());
+
+        Trxnsxctions trxnsxctions = new Trxnsxctions(1, "credit", "Applebees dinner", 100, checking, null );
+
+        given(bankService.getTransactionsByCheckingIdAndAccountId(eq(1),eq(1))).willReturn(Arrays.asList(trxnsxctions));
+
+        mockMvc.perform(get("/api/bank/txn/checking/{accountId}/{checkingId}", 1,1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))  // Checks that one checking account is returned
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].trxnsxctiontype").value("credit"))
+                .andExpect(jsonPath("$[0].trxnsxctiondescription").value("Applebees dinner"))
+                .andExpect(jsonPath("$[0].amount").value(100))
+                .andExpect(jsonPath("$[0].checking.id").value(1))
+                .andExpect(jsonPath("$[0].checking.account.id").value(1))
+                .andExpect(jsonPath("$[0].checking.account.name").value("Bill"))
+                .andExpect(jsonPath("$[0].savings").isEmpty());
+
     }
 
     @Test
-    void getTransactionsBySavingsAndAccountIds() {
+    void getTransactionsBySavingsAndAccountIds() throws Exception {
+
+        Account billAccount = new Account(1,"Bill", new ArrayList<>(), new ArrayList<>());
+        Savings savings = new Savings(1,"Bill's savings",1,2,billAccount, new ArrayList<>());
+
+        Trxnsxctions trxnsxctions = new Trxnsxctions(1, "credit", "Applebees dinner", 100, null, savings );
+
+        given(bankService.getTransactionsBySavingsIdAndAccountId(eq(1),eq(1))).willReturn(Arrays.asList(trxnsxctions));
+
+        mockMvc.perform(get("/api/bank/txn/savings/{savingsId}/{accountId}", 1, 1))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1))) // Checks that one transaction is returned
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].trxnsxctiontype").value("credit"))
+                .andExpect(jsonPath("$[0].trxnsxctiondescription").value("Applebees dinner"))
+                .andExpect(jsonPath("$[0].amount").value(100))
+                .andExpect(jsonPath("$[0].checking").isEmpty())
+                .andExpect(jsonPath("$[0].savings.id").value(1))
+                .andExpect(jsonPath("$[0].savings.account.id").value(1))
+                .andExpect(jsonPath("$[0].savings.account.name").value("Bill"));
     }
 }
