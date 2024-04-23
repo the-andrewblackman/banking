@@ -1,8 +1,6 @@
 package com.bank.bank.repository;
 
-import com.bank.bank.entity.Account;
 import com.bank.bank.entity.Checking;
-import com.bank.bank.entity.Trxnsxctions;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

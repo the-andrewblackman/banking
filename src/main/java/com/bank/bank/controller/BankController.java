@@ -12,7 +12,6 @@ import com.bank.bank.repository.CheckingRepository;
 import com.bank.bank.repository.SavingsRepository;
 import com.bank.bank.repository.TrxnsxctionRepository;
 import com.bank.bank.service.BankService;
-import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
