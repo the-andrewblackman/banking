@@ -77,11 +77,11 @@ public class BankController {
         return new ResponseEntity<>(bankService.deleteSavingsAccount(id),HttpStatus.OK);
     }
     @GetMapping("/txn/checking/{checkingId}")
-    public ResponseEntity<List<Trxnsxctions>> getTransactionsByCheckingAndAccountIds(@PathVariable Integer checkingId) throws InvalidRequestException{
+    public ResponseEntity<List<Trxnsxctions>> getTransactionsByCheckingId(@PathVariable Integer checkingId) throws InvalidRequestException{
         return new ResponseEntity<>(bankService.getTransactionsByCheckingId(checkingId),HttpStatus.OK);
     }
     @GetMapping("/txn/savings/{savingsId}")
-    public ResponseEntity<List<Trxnsxctions>> getTransactionsBySavingsAndAccountIds(@PathVariable Integer savingsId) throws InvalidRequestException{
+    public ResponseEntity<List<Trxnsxctions>> getTransactionsBySavingsId(@PathVariable Integer savingsId) throws InvalidRequestException{
         return new ResponseEntity<>(bankService.getTransactionsBySavingsId(savingsId),HttpStatus.OK);
     }
     @GetMapping("/txn/all")

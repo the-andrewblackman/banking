@@ -6,15 +6,19 @@ import com.bank.bank.entity.Account;
 import com.bank.bank.entity.Checking;
 import com.bank.bank.entity.Savings;
 import com.bank.bank.entity.Trxnsxctions;
+import com.bank.bank.exception.InvalidRequestException;
 import com.bank.bank.service.BankService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -276,4 +280,48 @@ class BankControllerTest {
                 .andExpect(jsonPath("$[0].savings.account.id").value(1))
                 .andExpect(jsonPath("$[0].savings.account.name").value("Bill"));
     }
-}
+
+   // @GetMapping("/txn/savings/{savingsId}")
+    @Test
+    void getTransactionsByCheckingId() throws Exception {
+
+        Account billAccount = new Account(1,"Bill", new ArrayList<>(), new ArrayList<>());
+        Checking checking= new Checking(1,"Bill's checking",1,2,billAccount, new ArrayList<>());
+        Trxnsxctions trxnsxctions = new Trxnsxctions(1, "credit", "Applebees dinner", 100, checking,null );
+
+        given(bankService.getTransactionsByCheckingId(eq(1))).willReturn(Arrays.asList(trxnsxctions));
+
+        mockMvc.perform(get("/api/bank/txn/checking/{checkingId}",1)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].trxnsxctiontype").value("credit"))
+                .andExpect(jsonPath("$[0].trxnsxctiondescription").value("Applebees dinner"))
+                .andExpect(jsonPath("$[0].amount").value(100))
+                .andExpect(jsonPath("$[0].checking.id").value(1))
+                .andExpect(jsonPath("$[0].checking.account.id").value(1))
+                .andExpect(jsonPath("$[0].checking.account.name").value("Bill"))
+                .andExpect(jsonPath("$[0].savings").isEmpty());
+    }
+    @Test
+    void getTransactionsBySavingsId() throws Exception {
+
+        Account edgarAccount = new Account(1, "Edgar", new ArrayList<>(), new ArrayList<>());
+        Savings savings = new Savings(1, "Edgar's savings", 1, 2, edgarAccount, new ArrayList<>());
+        Trxnsxctions trxnsxctions = new Trxnsxctions(1, "credit", "Applebees dinner", 100, null, savings);
+
+        given(bankService.getTransactionsBySavingsId(eq(1))).willReturn(Arrays.asList(trxnsxctions));
+
+        mockMvc.perform(get("/api/bank/txn/savings/{savingsId}", 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].trxnsxctiontype").value("credit"))
+                .andExpect(jsonPath("$[0].trxnsxctiondescription").value("Applebees dinner"))
+                .andExpect(jsonPath("$[0].amount").value(100))
+                .andExpect(jsonPath("$[0].checking").isEmpty())
+                .andExpect(jsonPath("$[0].savings.id").value(1))
+                .andExpect(jsonPath("$[0].savings.account.id").value(1))
+                .andExpect(jsonPath("$[0].savings.account.name").value("Edgar"));
+    }
+    }
