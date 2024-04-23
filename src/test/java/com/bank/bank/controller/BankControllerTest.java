@@ -38,14 +38,9 @@ class BankControllerTest {
 
     @Test
     public void testGetAllAccounts() throws Exception {
-        List<Checking> checking = new ArrayList<>();
-        List<Savings> savings = new ArrayList<>();
 
-        List<Checking> checking2 = new ArrayList<>();
-        List<Savings> savings2 = new ArrayList<>();
-
-        given(bankService.getAllAccounts()).willReturn(Arrays.asList(new Account(1,"Sample Account", checking, savings),
-                new Account(2, "Second Account",checking2,savings2)));
+        given(bankService.getAllAccounts()).willReturn(Arrays.asList(new Account(1,"Sample Account", new ArrayList<>(), new ArrayList<>()),
+                new Account(2, "Second Account",new ArrayList<>(),new ArrayList<>())));
 
         mockMvc.perform(get("/api/bank/accounts"))
                 .andExpect(status().isOk())
@@ -85,15 +80,8 @@ class BankControllerTest {
     }
     @Test
     public void testGetAllChecking() throws Exception {
-        Account account1 = new Account();
-        List<Trxnsxctions> list = new ArrayList<>();
-
-        Account account2 = new Account();
-        List<Trxnsxctions> kids_list = new ArrayList<>();
-
-        given(bankService.getAllChecking()).willReturn(Arrays
-                .asList(new Checking(1,"checking1",9, 100,account1,list),
-                        new Checking(2, "checking2", 3,5,account2, kids_list)));
+        given(bankService.getAllChecking()).willReturn(Arrays.asList(new Checking(1,"checking1",9, 100,new Account(), new ArrayList<>()),
+                        new Checking(2, "checking2", 3,5, new Account(), new ArrayList<>())));
 
         mockMvc.perform(get("/api/bank/checking"))
                 .andExpect(status().isOk())
@@ -103,20 +91,55 @@ class BankControllerTest {
     }
 
     @Test
-    void getAllCheckingByAccountId() throws Exception {
-        List<Checking> checking = new ArrayList<>();
-        List<Savings> savings = new ArrayList<>();
-        Account billAccount = new Account(1,"bill",checking, savings);
-        List<Trxnsxctions> listForBill = new ArrayList<>();
+    public void testGetAllTransactions() throws Exception {
+        Account account = new Account(1, "Bill", null, null);
+        Checking checking = new Checking(1, "checking_1", 5, 5, account, new ArrayList<>());
+        Trxnsxctions transaction1 = new Trxnsxctions(1, "credit", "Applebees dinner", 30, checking, null);
 
-        List<Checking> checking2 = new ArrayList<>();
-        List<Savings> savings2 = new ArrayList<>();
-        Account edgarAccount = new Account(2,"edgar",checking2,savings2);
-        List<Trxnsxctions> listForEdgar = new ArrayList<>();
+        Account account2 = new Account(2, "Edgar", null, null);
+        Checking checking2 = new Checking(1, "checking_1", 5, 5, account2, new ArrayList<>());
+        Trxnsxctions transaction2 = new Trxnsxctions(1, "credit", "Best Buy gadget", 30, checking2, null);
+
+        given(bankService.getAllTransactions()).willReturn(Arrays.asList(transaction1,transaction2));
+
+        mockMvc.perform(get("/api/bank/txn/all")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].trxnsxctiontype").value("credit"))
+                .andExpect(jsonPath("$[0].trxnsxctiondescription").value("Applebees dinner"))
+                .andExpect(jsonPath("$[0].amount").value(30))
+                .andExpect(jsonPath("$[0].checking.id").value(1))
+                .andExpect(jsonPath("$[0].checking.name").value("checking_1"))
+                .andExpect(jsonPath("$[0].checking.available_balance").value(5))
+                .andExpect(jsonPath("$[0].checking.present_balance").value(5))
+                .andExpect(jsonPath("$[0].checking.account.id").value(1))
+                .andExpect(jsonPath("$[0].checking.account.name").value("Bill"))
+                .andExpect(jsonPath("$[1].id").value(1))
+                .andExpect(jsonPath("$[1].trxnsxctiontype").value("credit"))
+                .andExpect(jsonPath("$[1].trxnsxctiondescription").value("Best Buy gadget"))
+                .andExpect(jsonPath("$[1].amount").value(30))
+                .andExpect(jsonPath("$[1].checking.id").value(1))
+                .andExpect(jsonPath("$[1].checking.name").value("checking_1"))
+                .andExpect(jsonPath("$[1].checking.available_balance").value(5))
+                .andExpect(jsonPath("$[1].checking.present_balance").value(5))
+                .andExpect(jsonPath("$[1].checking.account.id").value(2))
+                .andExpect(jsonPath("$[1].checking.account.name").value("Edgar"));
+
+    }
+
+    @Test
+    void getAllCheckingByAccountId() throws Exception {
+        Account billAccount = new Account(1,"bill",new ArrayList<>(), new ArrayList<>());
+//        List<Trxnsxctions> listForBill = new ArrayList<>();
+
+        Account edgarAccount = new Account(2,"edgar",new ArrayList<>(),new ArrayList<>());
+//        List<Trxnsxctions> listForEdgar = new ArrayList<>();
 
         // Mock service to return only relevant data based on account ID
         given(bankService.getAllCheckingByAccountId(eq(1))).willReturn(Arrays.asList(
-                new Checking(1, "BillsChecking", 9, 100, billAccount, listForBill)
+                new Checking(1, "BillsChecking", 9, 100, billAccount, new ArrayList<>())
         ));
 
         mockMvc.perform(get("/api/bank/checking/{accountId}", 1))
@@ -129,7 +152,7 @@ class BankControllerTest {
                 .andExpect(jsonPath("$[0].account.id").value(1));
 
         given(bankService.getAllCheckingByAccountId(eq(2))).willReturn(Arrays.asList(
-                new Checking(2, "EdgarsChecking", 3, 5, edgarAccount, listForEdgar)
+                new Checking(2, "EdgarsChecking", 3, 5, edgarAccount, new ArrayList<>())
         ));
 
         mockMvc.perform(get("/api/bank/checking/{accountId}", 2))
@@ -208,10 +231,9 @@ class BankControllerTest {
 
     @Test
     void getTransactionsByCheckingIdAndAccountId() throws Exception {
-        List<Checking> checkingList = new ArrayList<>();
-        List<Savings> savingsList = new ArrayList<>();
 
-        Account billAccount = new Account(1,"Bill",checkingList, savingsList);
+
+        Account billAccount = new Account(1,"Bill",new ArrayList<>(),new ArrayList<>());
         Checking checking = new Checking(1,"Bill's checking",1,2,billAccount, new ArrayList<>());
 
         Trxnsxctions trxnsxctions = new Trxnsxctions(1, "credit", "Applebees dinner", 100, checking, null );
