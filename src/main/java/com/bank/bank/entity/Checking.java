@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,9 +16,11 @@ import java.util.List;
 @Table(name = "checking")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class Checking {
+
+    private static final Logger logger = LoggerFactory.getLogger(Checking.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -37,6 +41,9 @@ public class Checking {
     @JsonIgnore
     private List<Trxnsxctions> trxnsxctions;
 
+    public Checking(){
+        logger.debug("Checking entity created.");
+    }
     public static Checking checkingDTO(Checking checking){
         return Checking.builder()
                 .id(checking.getId())

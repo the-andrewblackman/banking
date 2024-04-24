@@ -4,16 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 
 @Entity
 @Data
 @Table(name = "trxnsxctions")
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Trxnsxctions {
+    private static final Logger logger = LoggerFactory.getLogger(Trxnsxctions.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -29,7 +31,9 @@ public class Trxnsxctions {
     @ManyToOne
     @JoinColumn(name = "savings_id")
     private Savings savings;
-
+    public Trxnsxctions(){
+        logger.debug("Transaction entity created.");
+    }
     public static Trxnsxctions savingsDTO(Trxnsxctions trxnsxctions) {
         Savings savings = null;
         if (trxnsxctions.getSavings() != null) {

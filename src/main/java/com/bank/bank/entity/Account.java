@@ -1,10 +1,13 @@
 package com.bank.bank.entity;
 
+import com.bank.bank.controller.BankController;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,9 +16,9 @@ import java.util.List;
 @Table(name = "account")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @Builder
 public class Account {
+    private static final Logger logger = LoggerFactory.getLogger(Account.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,4 +30,7 @@ public class Account {
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Savings> savings;
+    public Account(){
+        logger.debug("Account entity created.");
+    }
 }

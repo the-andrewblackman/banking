@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,10 +15,10 @@ import java.util.List;
 @Entity
 @Table(name = "savings")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Savings {
+    private static final Logger logger = LoggerFactory.getLogger(Savings.class);
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -37,7 +39,9 @@ public class Savings {
     @OneToMany(mappedBy = "savings", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Trxnsxctions> trxnsxctions;
-
+    public Savings(){
+        logger.debug("Savings entity created.");
+    }
     public static Savings savingsDTO(Savings savings){
         return Savings.builder()
                 .id(savings.getId())
