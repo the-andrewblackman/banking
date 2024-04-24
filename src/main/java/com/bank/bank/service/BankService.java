@@ -1,5 +1,6 @@
 package com.bank.bank.service;
 
+import com.bank.bank.controller.BankController;
 import com.bank.bank.dto.CreateChecking;
 import com.bank.bank.dto.CreateSavings;
 import com.bank.bank.entity.Account;
@@ -12,6 +13,8 @@ import com.bank.bank.repository.CheckingRepository;
 import com.bank.bank.repository.SavingsRepository;
 import com.bank.bank.repository.TrxnsxctionRepository;
 import org.hibernate.exception.DataException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -30,11 +33,15 @@ public class BankService implements BankServiceImpl{
     @Autowired
     TrxnsxctionRepository trxnsxctionRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(BankController.class);
     public List<Account> getAllAccounts(){
+        logger.info("SERVICE: GET ALL ACCOUNTS.");
         List<Account> list = accountRepository.findAll();
+
         return list;
     }
     public String createAccount(Account account) throws InvalidRequestException {
+        logger.info("SERVICE: CREATE ACCOUNT.");
         try {
             Account accountMade = accountRepository.save(account);
             if(accountMade != null){
@@ -47,6 +54,7 @@ public class BankService implements BankServiceImpl{
         return String.format("Account %s was unsuccessful. Please try again.", account.getName());
     }
     public List<Checking> getAllChecking() throws InvalidRequestException {
+        logger.info("SERVICE: GET ALL CHECKING.");
         try {
             List<Checking> list = checkingRepository.findAll();
             return list.stream().map(Checking::checkingDTO).collect(Collectors.toList());
@@ -56,6 +64,7 @@ public class BankService implements BankServiceImpl{
         }
     }
     public String createChecking(CreateChecking createChecking) {
+        logger.info("SERVICE: CREATE CHECKING.");
         Account existingAccount = accountRepository.findByName(createChecking.getUserName());
 
         if (existingAccount != null) {
@@ -79,6 +88,7 @@ public class BankService implements BankServiceImpl{
         }
     }
     public String deleteCheckingAccount(String nameOfAccount){
+        logger.info("SERVICE: DELETE CHECKING ACCOUNT.");
         try{
 
             checkingRepository.deleteByName(nameOfAccount);
@@ -88,6 +98,7 @@ public class BankService implements BankServiceImpl{
         return new String("Checking account deleted.");
     }
     public List<Checking> getAllCheckingByAccountId(Integer accountId) throws InvalidRequestException{
+        logger.info("SERVICE: GET ALL CHECKING BY ACCOUNT ID.");
         try {
             List<Checking> list = checkingRepository.findAllByAccountId(accountId);
             return list;
@@ -97,6 +108,7 @@ public class BankService implements BankServiceImpl{
         }
     }
     public List<Savings> getAllSavings() throws InvalidRequestException{
+        logger.info("SERVICE: GET ALL SAVINGS.");
         try {
             List<Savings> list = savingsRepository.findAll();
             List<Savings> savings = list.stream().map(Savings::savingsDTO).collect(Collectors.toList());
@@ -107,6 +119,7 @@ public class BankService implements BankServiceImpl{
         }
     }
     public List<Savings> getAllSavingsByAccountId(Integer accountId) throws InvalidRequestException{
+        logger.info("SERVICE: GET ALL SAVINGS BY ACCOUNT ID.");
         try {
             List<Savings> list = savingsRepository.findAllByAccountId(accountId);
             return list;
@@ -116,6 +129,7 @@ public class BankService implements BankServiceImpl{
         }
     }
     public String createSavings(CreateSavings createSavings) throws InvalidRequestException {
+        logger.info("SERVICE: CREATE SAVINGS ACCOUNT");
         Account existingAccount = accountRepository.findByName(createSavings.getUserName());
         try {
             if (existingAccount != null) {
@@ -144,6 +158,7 @@ public class BankService implements BankServiceImpl{
     }
 
     public String deleteSavingsAccount(Integer savingsId){
+        logger.info("SERVICE: DELETE SAVINGS ACCOUNT");
         List<Trxnsxctions> relatedTransactions = trxnsxctionRepository.findBySavingsId(savingsId);
 
         if (!relatedTransactions.isEmpty()) {
@@ -155,6 +170,7 @@ public class BankService implements BankServiceImpl{
         return "savings account deleted";
     }
     public List<Trxnsxctions> getTransactionsByCheckingId(Integer checkingId) throws InvalidRequestException {
+        logger.info("SERVICE: GET TRANSACTIONS BY CHECKING ID");
         try {
             List<Trxnsxctions> transactions = trxnsxctionRepository.findAllByCheckingId(checkingId);
             return transactions.stream()
@@ -166,6 +182,7 @@ public class BankService implements BankServiceImpl{
         }
     }
     public List<Trxnsxctions> getTransactionsBySavingsId(Integer savingsId) throws InvalidRequestException{
+        logger.info("SERVICE: GET TRANSACTIONS BY SAVINGS ID");
         try {
             List<Trxnsxctions> transactions = trxnsxctionRepository.findAllBySavingsId(savingsId);
             return transactions.stream()
@@ -177,10 +194,12 @@ public class BankService implements BankServiceImpl{
         }
     }
     public List<Trxnsxctions> getAllTransactions() throws InvalidRequestException{
+        logger.info("SERVICE: GET ALL TRANSACTIONS");
         List<Trxnsxctions> list = trxnsxctionRepository.findAll();
         return list;
     }
     public List<Trxnsxctions> getTransactionsByCheckingIdAndAccountId(Integer checkingId, Integer accountId) throws InvalidRequestException {
+        logger.info("SERVICE: GET TRANSACTIONS BY ACCOUNT ID AND CHECKING ID");
         try {
             List<Trxnsxctions> transactions = trxnsxctionRepository.findByCheckingIdAndCheckingAccountId(checkingId, accountId);
             return transactions.stream()
@@ -192,6 +211,7 @@ public class BankService implements BankServiceImpl{
         }
     }
     public List<Trxnsxctions> getTransactionsBySavingsIdAndAccountId(Integer savingsId, Integer accountId) throws InvalidRequestException {
+        logger.info("SERVICE: GET TRANSACTIONS BY ACCOUNT ID AND SAVINGS ID");
         try {
             List<Trxnsxctions> transactions = trxnsxctionRepository.findBySavingsIdAndSavingsAccountId(savingsId, accountId);
             return transactions.stream()
