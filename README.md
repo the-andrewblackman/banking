@@ -1,3 +1,9 @@
+Run Spring project in a Docker container
+
+1. Clone project
+2. Create a Docker image with: 'docker build -t my-spring-boot-app' 
+3. Once Docker image is made, run: 'docker run -p 8082:8082 my-spring-boot-app'
+
 **API Endpoints**
 
 -------------------
