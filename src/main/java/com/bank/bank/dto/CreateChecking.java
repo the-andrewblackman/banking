@@ -12,7 +12,6 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 @Data
 public class CreateChecking {
-
     private static final Logger logger = LoggerFactory.getLogger(CreateChecking.class);
     private String accountName;
     private String userName;
