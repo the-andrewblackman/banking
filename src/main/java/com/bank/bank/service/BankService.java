@@ -54,10 +54,13 @@ public class BankService implements BankServiceImpl{
         return String.format("Account %s was unsuccessful. Please try again.", account.getName());
     }
     public List<Checking> getAllChecking() throws InvalidRequestException {
+
         logger.info("SERVICE: GET ALL CHECKING.");
+
         try {
             List<Checking> list = checkingRepository.findAll();
             return list.stream().map(Checking::checkingDTO).collect(Collectors.toList());
+
         } catch (DataAccessException e) {
             String message = "Data access problem. Please try again.";
             throw new InvalidRequestException(message);
