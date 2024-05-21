@@ -15,13 +15,16 @@ import com.bank.bank.service.BankService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("api/bank")
@@ -40,9 +43,17 @@ public class BankController {
     TrxnsxctionRepository trxnsxctionRepository;
     @Autowired
     BankService bankService;
+    @Autowired
+    private MessageSource messageSource;
 
     private static final Logger logger = LoggerFactory.getLogger(BankController.class);
 
+    @GetMapping("/")
+    public String greet(Locale locale, Model model) {
+        model.addAttribute("greeting", messageSource.getMessage("greeting", null, locale));
+        model.addAttribute("welcomeMessage", messageSource.getMessage("welcome.message", null, locale));
+        return "greet";
+    }
     @GetMapping ("/accounts")
     public ResponseEntity<List<Account>> getAllAccounts(){
         logger.info("GET: ALL USER ACCOUNTS.");
@@ -108,18 +119,14 @@ public class BankController {
         logger.info("GET: ALL TRANSACTIONS.");
         return new ResponseEntity<>(bankService.getAllTransactions(), HttpStatus.OK);
     }
-
     @GetMapping("/txn/checking/{accountId}/{checkingId}")
     public ResponseEntity<List<Trxnsxctions>> getTransactionsByAccountIdAndCheckingId(@PathVariable Integer checkingId,@PathVariable Integer accountId) throws InvalidRequestException {
         logger.info("GET: TRANSACTIONS BY ACCOUNT ID AND CHECKING ID.");
         return new ResponseEntity<>(bankService.getTransactionsByCheckingIdAndAccountId(checkingId,accountId),HttpStatus.OK);
     }
-
     @GetMapping("/txn/savings/{accountId}/{savingsId}")
     public ResponseEntity<List<Trxnsxctions>> getTransactionsByAccountIdAndSavingsId(@PathVariable Integer savingsId,@PathVariable Integer accountId) throws InvalidRequestException {
         logger.info("GET: TRANSACTIONS BY ACCOUNT ID AND SAVINGS ID.");
         return new ResponseEntity<>(bankService.getTransactionsBySavingsIdAndAccountId(savingsId,accountId),HttpStatus.OK);
     }
-
-
 }

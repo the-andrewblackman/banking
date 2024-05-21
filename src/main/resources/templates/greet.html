@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title th:text="#{title}">Title</title>
+</head>
+<body>
+<h1 th:text="#{greeting}">Hello</h1>
+<p th:text="#{welcome.message}">Welcome to our application!</p>
+
+<form action="#" method="get">
+    <label for="locales" th:text="#{lang.change}">Change Language</label>:
+    <select id="locales" name="lang" onchange="this.form.submit()">
+        <option value="en" th:text="#{lang.eng}" th:selected="${#locale.language == 'en'}">English</option>
+        <option value="fr" th:text="#{lang.fr}" th:selected="${#locale.language == 'fr'}">French</option>
+        <option value="es" th:text="#{lang.es}" th:selected="${#locale.language == 'es'}">Spanish</option>
+    </select>
+</form>
+</body>
+</html>
