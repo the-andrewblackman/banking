@@ -54,21 +54,21 @@ public class BankController {
         model.addAttribute("welcomeMessage", messageSource.getMessage("welcome.message", null, locale));
         return "greet";
     }
-    @GetMapping ("/accounts")
-    public ResponseEntity<List<Account>> getAllAccounts(){
-        logger.info("GET: ALL USER ACCOUNTS.");
-        return new ResponseEntity<>(bankService.getAllAccounts(), HttpStatus.OK);
-    }
-    @PostMapping ("/accounts/create")
-    public ResponseEntity<String> createAccount(@RequestBody Account account) throws InvalidRequestException {
-        logger.info("POST: CREATE ACCOUNT.");
-        return new ResponseEntity<>(bankService.createAccount(account),HttpStatus.OK);
-    }
-    @GetMapping("/checking")
-    public ResponseEntity<List<Checking>> getAllChecking() throws InvalidRequestException {
-        logger.info("GET: ALL CHECKING ACCOUNTS.");
-        return new ResponseEntity<>(bankService.getAllChecking(), HttpStatus.OK);
-    }
+//    @GetMapping ("/accounts")
+//    public ResponseEntity<List<Account>> getAllAccounts(){
+//        logger.info("GET: ALL USER ACCOUNTS.");
+//        return new ResponseEntity<>(bankService.getAllAccounts(), HttpStatus.OK);
+//    }
+//    @PostMapping ("/accounts/create")
+//    public ResponseEntity<String> createAccount(@RequestBody Account account) throws InvalidRequestException {
+//        logger.info("POST: CREATE ACCOUNT.");
+//        return new ResponseEntity<>(bankService.createAccount(account),HttpStatus.OK);
+//    }
+//    @GetMapping("/checking")
+//    public ResponseEntity<List<Checking>> getAllChecking() throws InvalidRequestException {
+//        logger.info("GET: ALL CHECKING ACCOUNTS.");
+//        return new ResponseEntity<>(bankService.getAllChecking(), HttpStatus.OK);
+//    }
     @PostMapping("/checking/create")
     public ResponseEntity<String> createChecking(@RequestBody CreateChecking createChecking) {
         logger.info("POST: CREATE CHECKING ACCOUNT.");
@@ -84,11 +84,11 @@ public class BankController {
         logger.info("GET: ALL CHECKING BY ACCOUNT ID.");
         return new ResponseEntity<>(bankService.getAllCheckingByAccountId(accountId),HttpStatus.OK);
     }
-    @GetMapping("/savings")
-    public ResponseEntity<List<Savings>> getAllSavings() throws InvalidRequestException{
-        logger.info("GET: ALL SAVINGS ACCOUNTS.");
-        return new ResponseEntity<>(bankService.getAllSavings(),HttpStatus.OK);
-    }
+//    @GetMapping("/savings")
+//    public ResponseEntity<List<Savings>> getAllSavings() throws InvalidRequestException{
+//        logger.info("GET: ALL SAVINGS ACCOUNTS.");
+//        return new ResponseEntity<>(bankService.getAllSavings(),HttpStatus.OK);
+//    }
     @GetMapping("/savings/{accountId}")
     public ResponseEntity<List<Savings>> getAllSavingsByAccountId(@PathVariable Integer accountId) throws InvalidRequestException{
         logger.info("GET: ALL SAVINGS ACCOUNTS BY ACCOUNT ID.");
@@ -114,19 +114,19 @@ public class BankController {
         logger.info("GET: TRANSACTIONS BY SAVINGS ID.");
         return new ResponseEntity<>(bankService.getTransactionsBySavingsId(savingsId),HttpStatus.OK);
     }
-    @GetMapping("/txn/all")
-    public ResponseEntity<List<Trxnsxctions>> getAllTransactions() throws InvalidRequestException{
-        logger.info("GET: ALL TRANSACTIONS.");
-        return new ResponseEntity<>(bankService.getAllTransactions(), HttpStatus.OK);
-    }
-    @GetMapping("/txn/checking/{accountId}/{checkingId}")
-    public ResponseEntity<List<Trxnsxctions>> getTransactionsByAccountIdAndCheckingId(@PathVariable Integer checkingId,@PathVariable Integer accountId) throws InvalidRequestException {
-        logger.info("GET: TRANSACTIONS BY ACCOUNT ID AND CHECKING ID.");
-        return new ResponseEntity<>(bankService.getTransactionsByCheckingIdAndAccountId(checkingId,accountId),HttpStatus.OK);
-    }
-    @GetMapping("/txn/savings/{accountId}/{savingsId}")
-    public ResponseEntity<List<Trxnsxctions>> getTransactionsByAccountIdAndSavingsId(@PathVariable Integer savingsId,@PathVariable Integer accountId) throws InvalidRequestException {
-        logger.info("GET: TRANSACTIONS BY ACCOUNT ID AND SAVINGS ID.");
-        return new ResponseEntity<>(bankService.getTransactionsBySavingsIdAndAccountId(savingsId,accountId),HttpStatus.OK);
-    }
+//    @GetMapping("/txn/all")
+//    public ResponseEntity<List<Trxnsxctions>> getAllTransactions() throws InvalidRequestException{
+//        logger.info("GET: ALL TRANSACTIONS.");
+//        return new ResponseEntity<>(bankService.getAllTransactions(), HttpStatus.OK);
+//    }
+//    @GetMapping("/txn/checking/{accountId}/{checkingId}")
+//    public ResponseEntity<List<Trxnsxctions>> getTransactionsByAccountIdAndCheckingId(@PathVariable Integer checkingId,@PathVariable Integer accountId) throws InvalidRequestException {
+//        logger.info("GET: TRANSACTIONS BY ACCOUNT ID AND CHECKING ID.");
+//        return new ResponseEntity<>(bankService.getTransactionsByCheckingIdAndAccountId(checkingId,accountId),HttpStatus.OK);
+//    }
+//    @GetMapping("/txn/savings/{accountId}/{savingsId}")
+//    public ResponseEntity<List<Trxnsxctions>> getTransactionsByAccountIdAndSavingsId(@PathVariable Integer savingsId,@PathVariable Integer accountId) throws InvalidRequestException {
+//        logger.info("GET: TRANSACTIONS BY ACCOUNT ID AND SAVINGS ID.");
+//        return new ResponseEntity<>(bankService.getTransactionsBySavingsIdAndAccountId(savingsId,accountId),HttpStatus.OK);
+//    }
 }
